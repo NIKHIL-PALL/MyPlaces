@@ -13,12 +13,10 @@ const UserPlaces =  () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   useEffect(() => {
     const fetchPlaces = async () => {
-      console.log("fetchPlaces is called")
       try {
         const reponseData = await sendRequest(
           `http://localhost:5000/api/places/user/${userId}`
         );
-        console.log(reponseData);
         setLoadedPlaces(reponseData.places);
       } catch (err) {
         console.log(err.message);

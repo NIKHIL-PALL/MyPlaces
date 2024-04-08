@@ -65,11 +65,11 @@ const UpdatePlace = () => {
   const placeUpdateSubmitHandler =async (event) => {
     event.preventDefault();
     try{
-      await sendRequest(`http://localhost:5000/api/places/${placeId}`, 'PATCH',{"Content-Type" : "application/json"},JSON.stringify ({
+      await sendRequest(`http://localhost:5000/api/places/${placeId}`, 'PATCH',JSON.stringify ({
         title : formState.inputs.title.value,
         description : formState.inputs.description.value,
 
-      }) );
+      }),{"Content-Type" : "application/json"} );
       history.push('/'+auth.userId+"/places");
     }
     catch(err){}

@@ -13,7 +13,6 @@ const Users = () => {
     const fetchData = async () => {
       try {
         const response = await sendRequest("http://localhost:5000/api/users");
-        console.log(response)
         setLoadedData(response.users);
       } catch (err) {}
     };

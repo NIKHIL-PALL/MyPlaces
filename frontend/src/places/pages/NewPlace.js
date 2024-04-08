@@ -37,21 +37,20 @@ const NewPlace = () => {
   );
 
   const placeSubmitHandler = async (event) => {
-    console.log("PlaceSubmitHandler");
     event.preventDefault();
     try {
       const responseData = await sendRequest(
         "http://localhost:5000/api/places",
         "POST",
-        { "Content-Type": "application/json" },
+        
         JSON.stringify({
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
           address: formState.inputs.address.value,
           creator: auth.userId,
-        })
+        }),
+        { "Content-Type": "application/json" }
       );
-      console.log(responseData);
       history.push("/")
     } catch (err) {
     console.log(err.message);

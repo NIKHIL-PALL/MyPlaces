@@ -6,6 +6,7 @@ import Button from "../../shared/components/FormElements/Button";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
@@ -40,6 +41,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -50,6 +52,10 @@ const Auth = () => {
           name: {
             value: "",
             isValid: false,
+            image: {
+              value: null,
+              isValid: false,
+            },
           },
         },
         false
@@ -66,29 +72,30 @@ const Auth = () => {
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/login",
           "POST",
-          {
-            "Content-Type": "application/json",
-          },
+
           JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
-          })
+          }),
+          {
+            "Content-Type": "application/json"
+          }
         );
         auth.login(responseData.user.id);
       } catch (err) {}
     } else {
       try {
+        const formData = new FormData();
+        formData.append("email", formState.inputs.email.value);
+        formData.append("name", formState.inputs.name.value);
+        formData.append("password", formState.inputs.password.value);
+        formData.append("image", formState.inputs.image.value);
+        console.log(formData)
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
-          {
-            "Content-Type": "application/json",
-          },
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          })
+          formData,
+          {"Content-Type" : "application/json"}
         );
         auth.login(responseData.user.id);
       } catch (err) {}
@@ -113,6 +120,9 @@ const Auth = () => {
               errorText="Please enter a name."
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
+            <ImageUpload onInput={inputHandler} center id="image" />
           )}
           <Input
             element="input"
